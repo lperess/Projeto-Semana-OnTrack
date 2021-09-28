@@ -1,12 +1,26 @@
 const fetchAPI = async () => {
-  const artist = 'Skank';
-  const song = 'Vamos Fugir';
+  const artist = document.querySelector('#input-artist').value;
+  const song = document.querySelector('#input-song').value;
 
-  const response = await fetch(`https://api.vagalume.com.br/search.art?q=Skank&limit=5`);
+  if (!artist) {
+    alert('Insira o nome de um artista');
+  }
+  if (!song) {
+    alert('Insira o nome de uma música');
+  }
 
-  const data = await response.json();
+  if (artist && song) {
+    try {
+      const response = await fetch(`https://api.vagalume.com.br/search.php?art=${artist}&mus=${song}`);
 
-  console.log(data);
+      const data = await response.json();
+
+      document.querySelector('#lyrics').innerText = data.mus[0].text;
+    } catch (error) { alert('Artista ou música não encontrado') }
+  }
 };
 
-fetchAPI();
+window.onload = () => {
+  const submitBtn = document.querySelector('#submit-btn');
+  submitBtn.addEventListener('click', fetchAPI);
+};
