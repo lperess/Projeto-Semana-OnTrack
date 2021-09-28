@@ -1,22 +1,39 @@
+const renderResults = (option) => {
+  const section = document.querySelector('#results');
+
+  const band = option.band;
+  const title = option.title;
+
+  const div = document.createElement('div');
+  div.className = 'result-card';
+
+  if (title) {
+    div.innerText = `${band} - ${title}`;
+  } else {
+    div.innerText = `${band}`;
+  }
+
+  section.appendChild(div);
+
+  // div.addEventListener('click', fetchOption);
+};
+
 const fetchAPI = async () => {
-  const artist = document.querySelector('#input-artist').value;
-  const song = document.querySelector('#input-song').value;
+  const query = document.querySelector('#input-query').value;
 
-  if (!artist) {
-    alert('Insira o nome de um artista');
-  }
-  if (!song) {
-    alert('Insira o nome de uma música');
+  if (!query) {
+    alert('Insira palavras-chave');
   }
 
-  if (artist && song) {
+  else {
     try {
-      const response = await fetch(`https://api.vagalume.com.br/search.php?art=${artist}&mus=${song}`);
+      const response = await fetch(`https://api.vagalume.com.br/search.artmus?q=${query}&limit=5`);
 
       const data = await response.json();
 
-      document.querySelector('#lyrics').innerText = data.mus[0].text;
-    } catch (error) { alert('Artista ou música não encontrado') }
+      data.response.docs.forEach(option => renderResults(option));
+      console.log(data.response.docs)
+    } catch (error) { alert('erro na requisição') }
   }
 };
 

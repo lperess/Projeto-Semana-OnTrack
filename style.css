@@ -1,0 +1,16 @@
+#results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+div {
+  background-color: lightgrey;
+  display: flex;
+  padding: 15px;
+  margin: 15px 20px;
+  width: 20%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
