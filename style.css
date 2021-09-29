@@ -1,6 +1,12 @@
 body {
   font-family: sans-serif;
   text-align: center;
+  background-color: rgb(136, 136, 136);
+}
+
+input {
+  margin-top: 15px;
+  margin-bottom: 50px;
 }
 
 #results {
@@ -25,4 +31,14 @@ div {
 
 div:hover {
   background-color: grey;
+}
+
+header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#vaga-logo {
+  height: 100px;
 }

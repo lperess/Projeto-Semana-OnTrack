@@ -8,6 +8,13 @@ const fetchLyric = async (artist, song) => {
   } catch (error) { alert('Artista ou música não encontrado') }
 };
 
+const fetchImg = async (id) => {
+  const response = await fetch(`https://api.vagalume.com.br/image.php?bandID=${id}`);
+
+  const data = await response.json();
+  return data.images[0].url;
+};
+
 const fetchOption = async (event) => {
   let artist;
   let song;
@@ -25,8 +32,19 @@ const fetchOption = async (event) => {
   fetchLyric(artist.innerText, song.innerText);
 };
 
-const renderResults = (option) => {
+const getArtistId = async (url) => {
+  const response = await fetch(`https://www.vagalume.com.br/${url}/index.js`);
+  const data = await response.json();
+  const answer = await fetchImg(data.artist.id);
+  return answer;
+};
+
+const renderResults = async (option, completeURL) => {
+  const imgURL = await getArtistURL(completeURL);
   const section = document.querySelector('#results');
+  const img = document.createElement('img');
+  img.src = imgURL;
+  img.style.width = '100px';
 
   const band = option.band;
   const title = option.title;
@@ -43,10 +61,19 @@ const renderResults = (option) => {
   artist.className = 'artist';
   artist.innerText = band;
   div.appendChild(artist);
+  
+  console.log(img)
+  div.appendChild(img);
 
   section.appendChild(div);
 
   div.addEventListener('click', fetchOption);
+};
+
+const getArtistURL = async completeURL => {
+  const artist = completeURL.split('/');
+  const answer = await getArtistId(artist[1]);
+  return answer;
 };
 
 const fetchAPI = async () => {
@@ -64,10 +91,13 @@ const fetchAPI = async () => {
 
       const section = document.querySelector('#results');
       section.innerHTML = '';
-      data.response.docs
+      const songs = data.response.docs
         .filter(option => option.title)
-        .forEach(song => renderResults(song));
-
+      // .forEach(song => {
+      //   renderResults(song, getArtistURL(song.url));
+      for (let i = 0; i < songs.length; i += 1) {
+        renderResults(songs[i], songs[i].url)
+      }
     } catch (error) { alert('erro na requisição') }
   }
   document.querySelector('#input-query').value = '';
