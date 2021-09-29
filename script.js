@@ -39,6 +39,12 @@ const getArtistId = async (url) => {
   return answer;
 };
 
+const getArtistURL = async completeURL => {
+  const artist = completeURL.split('/');
+  const answer = await getArtistId(artist[1]);
+  return answer;
+};
+
 const renderResults = async (option, completeURL) => {
   const imgURL = await getArtistURL(completeURL);
   const section = document.querySelector('#results');
@@ -70,12 +76,6 @@ const renderResults = async (option, completeURL) => {
   div.addEventListener('click', fetchOption);
 };
 
-const getArtistURL = async completeURL => {
-  const artist = completeURL.split('/');
-  const answer = await getArtistId(artist[1]);
-  return answer;
-};
-
 const fetchAPI = async () => {
   const query = document.querySelector('#input-query').value;
 
@@ -93,8 +93,6 @@ const fetchAPI = async () => {
       section.innerHTML = '';
       const songs = data.response.docs
         .filter(option => option.title)
-      // .forEach(song => {
-      //   renderResults(song, getArtistURL(song.url));
       for (let i = 0; i < songs.length; i += 1) {
         renderResults(songs[i], songs[i].url)
       }
